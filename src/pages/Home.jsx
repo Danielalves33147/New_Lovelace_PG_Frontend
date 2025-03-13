@@ -8,20 +8,12 @@ import Swal from "sweetalert2";
 import React from "react";
 
 import { useUser } from "../../services/UserContext";  // Importando o contexto do usuário
-import { auth, db } from "../../services/firebaseConfig.js";  
-import { doc, setDoc, getDoc } from "firebase/firestore";
-import { collection, query, where, getDocs } from "firebase/firestore";
-
-import { sendPasswordResetEmail } from "firebase/auth";
 
 import { load, success_cad, success, fail, ainda_nao} from "../../services/alert.js"; //Sweet Alert 2
 
 //import { toast_load, toast_success_cad, toast_success, toast_fail} from "../../services/alert_toastfy.js"; // REACT TOASTFY
 
-import { sonner_load, sonner_success_cad, sonner_success, sonner_fail, sonner_ainda_nao} from "../../services/alert_toast.js"; // Sonner
-
-import { useSignInWithEmailAndPassword, useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
-
+import { sonner_load, sonner_success_cad, sonner_success, sonner_fail, sonner_ainda_nao, sonner_conta_desativada} from "../../services/alert_toast.js"; // Sonner
 
 export default function Home() {
   const [isActive, setIsActive] = useState(false);
@@ -43,19 +35,26 @@ export default function Home() {
 
   const { setUserName } = useUser();  // Obtendo o setUserName (renomeado para clareza)
   
-  const [signInWithEmailAndPassword, userLogin, loadingLogin, errorLogin] = useSignInWithEmailAndPassword(auth);
-  const [createUserWithEmailAndPassword, userRegister, loadingRegister, errorRegister] = useCreateUserWithEmailAndPassword(auth);
 
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const storedUser  = JSON.parse(sessionStorage.getItem('user'));
-    console.log(storedUser);
-    
-    if (storedUser ) {
-        navigate("/ua"); // Navega para /ua se um usuário estiver armazenado
+    try {
+        const userData = sessionStorage.getItem("user");
+
+        if (userData) {
+            const storedUser = JSON.parse(userData);
+            if (storedUser) {
+                navigate("/ua");
+            }
+        }
+    } catch (error) {
+        console.error("Erro ao analisar JSON do usuário:", error);
+        sessionStorage.removeItem("user"); // Remove o dado inválido para evitar problemas futuros
     }
 }, [navigate]);
+
+
 
 
   const togglePasswordVisibility = () => {
@@ -106,153 +105,80 @@ export default function Home() {
       title: message,
     });
   };
-  // Função para cadastro FUNCIONAAAAAAAAA OS 2 JUNTOS
+  // Testando pg
   async function handleSignUp(e) {
+    e.preventDefault();
+
+    try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/users`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, email, password }),
+        });
+
+        if (!response.ok) {
+            throw new Error("Erro ao cadastrar usuário.");
+        }
+
+        const user = await response.json();
+        sessionStorage.setItem("user", JSON.stringify(user));
+        navigate("/ua");
+        sonner_success_cad();
+    } catch (error) {
+        console.error("Erro ao registrar usuário:", error);
+        sonner_fail();
+    }
+}
+
+// PostGree Login Funciona
+async function handleSignIn(e) {
   e.preventDefault();
 
-  sonner_load(); // Carregando algo visual
-
   try {
-    // Criação do usuário no Firebase com email e senha
-    const userCredential = await createUserWithEmailAndPassword(email, password);
-    const user = userCredential.user;
+      sonner_load(); // Inicia o carregamento
 
-    // Verificação no banco de dados local se o email já está em uso
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/users`);
-    const users = await response.json();
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+      });
 
-    const userExists = users.some(u => u.email === email);
-    if (userExists) {
-      setError("Este email já está sendo utilizado. Por favor, escolha outro.");
-      return;
-    }
+      const data = await response.json();
+      console.log("🚀 Dados recebidos do backend:", data); // 👀 Depuração
 
-    // Se o email não está cadastrado localmente, cadastrar no Firebase e banco local
-    await setDoc(doc(db, "users", user.uid), {
-      name: name,
-      email: email
-    });
-
-    // Cadastrando no banco de dados local
-    const newUser = {
-      name: name,
-      email: email,
-      password: password,
-      profileImage: "/defaultProfile.png", // Imagem padrão
-      uid: user.uid // Associando o UID gerado pelo Firebase
-    };
-
-    const localResponse = await fetch(`${import.meta.env.VITE_API_URL}/users`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newUser)
-    });
-
-    const savedUser = await localResponse.json(); // Salva o usuário com ID local
-
-    // Salvando o usuário no sessionStorage com o id (local) e o uid (Firebase)
-    const sessionUser = {
-      id: savedUser.id,  // ID gerado pelo banco de dados local
-      name: savedUser.name,
-      email: savedUser.email,
-      uid: user.uid      // UID do Firebase
-    };
-    sessionStorage.setItem('user', JSON.stringify(sessionUser));
-
-    // Exibindo successo e redirecionando
-    sonner_success_cad(); 
-    clearFields();
-    setIsActive(false);
-    // Redirecionando após successo
-    setTimeout(() => {
-
-      navigate('/ua');
-    }, 5000);
-
-  } catch (error) {
-    console.error("Erro ao registrar ou salvar no Firestore ou banco local:", error);
-    sonner_fail(); // Exibe erro visual
-  }
-  }
-
-  async function getLocalUserId(uid) {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/users?uid=${uid}`); // Modifique conforme necessário
-    const users = await response.json();
-    return users.length > 0 ? users[0].id : null; // Retorna o ID se encontrado
-  }
-
-// Handle user login FUNCIONAAAAAAAAA OS 2 JUNTOS
-  async function handleSignIn(e) {
-  e.preventDefault();
-
-  if (loadingLogin) {
-    return; // Evita que o usuário envie a solicitação múltiplas vezes
-  }
-  setLoading(true); // Mostrando a indicação de loading
-  try {
-    sonner_load(); // Inicia a animação de loading
-
-    // Faz o login com Firebase Authentication
-    const userCredential = await signInWithEmailAndPassword(email, password);
-
-    // Se o login for bem-sucedido, este código será alcançado
-    const user = userCredential.user;
-
-    // Busca o nome e o ID do usuário no Firestore
-    const userName = await getUserNameFromFirestore(user.uid);
-    const localUserId = await getLocalUserId(user.uid); // Função para obter o ID do banco local
-
-    if (userName) {
-      const userData = {
-        id: localUserId, // ID do banco de dados local
-        email: user.email,
-        name: userName,
-        uid: user.uid // UID do Firebase
-      };
-      sessionStorage.setItem('user', JSON.stringify(userData));
-      navigate('/ua'); // Redireciona para a próxima página
-      sonner_success(); // Exibe mensagem de successo
-      // console.log("NOME: ", userName);
-      // console.log("ID (local): ", localUserId);
-      // console.log("UID (Firebase): ", user.uid);
-    } else {
-      setError("Erro ao obter dados do usuário. Tente novamente.");
-      sonner_fail(); // Chama a função fail em caso de erro
-    }
-  } catch (error) {
-    console.error("Erro ao fazer login:", error.message); // Adiciona log para depuração
-    
-    // Adiciona mensagem de erro com base no código de erro
-    if (error.code) {
-      switch (error.code) {
-        case 'auth/invalid-email':
-          setError("Email inválido. Verifique o formato.");
-          break;
-        case 'auth/user-disabled':
-          setError("Usuário desativado. Entre em contato com o suporte.");
-          break;
-        case 'auth/user-not-found':
-          setError("Usuário não encontrado. Verifique suas credenciais.");
-          break;
-        case 'auth/wrong-password':
-          setError("Senha incorreta. Tente novamente.");
-          break;
-        default:
-          setError("Erro ao fazer login. Tente novamente.");
+      if (!response.ok) {
+          if (response.status === 403) {
+              sonner_conta_desativada(data.error);
+          } else if (response.status === 401) {
+              sonner_fail(data.error);
+          } else {
+              sonner_fail("Erro desconhecido ao fazer login.");
+          }
+          return;
       }
-    } else {
-      setError("Erro desconhecido. Tente novamente.");
-    }
 
-    sonner_fail(); // Chama a função fail em caso de erro
-  } finally {
-    setLoading(false); // Desativa o loading
-  }
-  }
+      if (!data || !data.data) {
+          console.error("❌ Erro: Nenhum dado de usuário recebido.");
+          sessionStorage.removeItem("user");
+          return;
+      }
 
-  async function handleForgotPassword() {
+      // ✅ Armazena os dados corretamente no sessionStorage
+      sessionStorage.setItem("user", JSON.stringify(data.data));
+
+      // ✅ Redireciona o usuário para a área logada
+      navigate("/ua");
+      sonner_success(data.message);
+
+  } catch (error) {
+      console.error("❌ Erro ao fazer login:", error);
+      sonner_fail("Erro ao conectar ao servidor.");
+  }
+}
+
+
+
+async function handleForgotPassword() {
     Swal.fire({
       title: "Esqueceu sua senha?",
       text: "Digite seu e-mail para redefinir a senha:",
@@ -289,33 +215,7 @@ export default function Home() {
         }
       }
     });
-  }
-  
-  // Função para verificar se o e-mail existe no Firestore
-  async function checkIfEmailExists(email) {
-    const usersRef = collection(db, "users"); // Referência para a coleção de usuários no Firestore
-    const q = query(usersRef, where("email", "==", email)); // Consulta pelo e-mail
-    const querySnapshot = await getDocs(q); // Executar a consulta
-    return !querySnapshot.empty; // Retorna verdadeiro se houver um usuário com o e-mail fornecido
-  }
-
-  async function getUserByEmail(email) {
-    const usersRef = collection(db, "users"); // Obtenha a referência à coleção "users"
-    const q = query(usersRef, where("email", "==", email)); // Crie a consulta
-    const querySnapshot = await getDocs(q); // Busque os documentos que correspondem à consulta
-    return !querySnapshot.empty; // Retorna verdadeiro se o e-mail existir
-  }
-
-  async function getUserNameFromFirestore(uid) {
-    const userDoc = doc(db, "users", uid);
-    const docSnap = await getDoc(userDoc);
-    if (docSnap.exists()) {
-      return docSnap.data().name;
-    } else {
-      console.log("Nenhum documento encontrado!");
-      return null;
-    }
-  }
+}
 
   return (
     <div className={styles.container}>

@@ -1,24 +1,68 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './ActivityGallery.module.css';
+import { toast } from 'sonner';
+import Swal from "sweetalert2";
 
 function ActivityGallery() {
     const [activities, setActivities] = useState([]);
-    const [, setUser] = useState(null); 
+    const [storedUser, setStoredUser] = useState(null);
 
     useEffect(() => {
-        const storedUser = JSON.parse(sessionStorage.getItem('user'));
-        if (storedUser) {
-            setUser(storedUser); 
-        }
-        const userId = storedUser ? storedUser.id : null;
-        if (userId) {
-            fetch(`${import.meta.env.VITE_API_URL}/activities?userId=${userId}`)
+        const userData = JSON.parse(sessionStorage.getItem('user'));
+        if (userData) {
+            setStoredUser(userData);
+            fetch(`${import.meta.env.VITE_API_URL}/activities?userId=${userData.id}`)
                 .then(resp => resp.json())
-                .then(data => setActivities(data))
-                .catch(err => console.log(err));
+                .then(data => setActivities(Array.isArray(data) ? data : []))
+                .catch(err => console.error("Erro ao carregar atividades:", err));
         }
     }, []);
+
+    const deleteActivity = async (activityId) => {
+        if (!storedUser) {
+            toast.error("Usuário não autenticado.");
+            return;
+        }
+
+        // 🔥 SweetAlert para confirmação antes de excluir
+        const { value: confirmationText } = await Swal.fire({
+            title: "Tem certeza?",
+            text: "Uma vez deletada, é impossivel recupera-la, se entender isso confirme escrevendo 'Entendo o que estou fazendo'",
+            input: "text",
+            inputPlaceholder: "Digite aqui...",
+            showCancelButton: true,
+            confirmButtonColor: "#f21b3f",
+            cancelButtonColor: "#aaa",
+            confirmButtonText: "Excluir",
+            cancelButtonText: "Cancelar",
+            icon: "warning",
+        });
+
+        if (confirmationText !== "Entendo o que estou fazendo") {
+            toast.warning("Exclusão cancelada.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/activities/${activityId}`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ user_id: storedUser.id }),
+            });
+
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error || "Erro ao excluir atividade.");
+            }
+
+            toast.success("Atividade excluída com sucesso!");
+            setActivities(activities.filter(activity => activity.id !== activityId));
+
+        } catch (error) {
+            toast.error("Erro ao excluir atividade: " + error.message);
+        }
+    };
 
     return (
         <section className={styles.gallery}>
@@ -26,11 +70,16 @@ function ActivityGallery() {
                 {activities.length > 0 ? (
                     activities.map(activity => (
                         <div key={activity.id} className={styles.activityCard}>
-                            <h2>{activity.name}</h2>                           
+                            <h2>{activity.name}</h2>
                             <div className={styles.links}>
-                                <p>{new Date(activity.date).toLocaleDateString('pt-BR')}</p>
+                                <p>{activity.created_at ? new Date(activity.created_at).toLocaleDateString('pt-BR') : "Data não disponível"}</p>
                                 <div>
                                     <Link to={`/eA/${activity.id}`} className={styles.linkButton}>Acompanhar</Link>
+                                    {storedUser?.id === activity.user_id && (
+                                        <button onClick={() => deleteActivity(activity.id)} className={styles.deleteButton}>
+                                            Deletar
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </div>

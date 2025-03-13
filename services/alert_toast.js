@@ -90,3 +90,37 @@ export function sonner_ainda_nao() {
    duration: 3000 // Duração de 3 segundos
  });
  }
+
+ export function sonner_conta_desativada() {
+   toast.warning("Sua conta está desativada. Entre em contato com o suporte.", {
+      duration: 3000
+   });
+}
+
+
+export async function sonnerLoad(action) {
+   return new Promise((resolve, reject) => {
+       const loadingToast = toast.loading("Salvando atividade...");
+
+       setTimeout(async () => {
+           try {
+               const result = await action();
+               toast.dismiss(loadingToast); // Remove o loading
+               resolve(result);
+           } catch (error) {
+               toast.dismiss(loadingToast);
+               reject(error);
+           }
+       }, 3000);
+   });
+}
+
+// Exibe o Sonner de sucesso ao salvar atividade
+export function sonnerSuccess() {
+   toast.success("Atividade salva com sucesso!");
+}
+
+// Exibe o Sonner de erro ao salvar atividade
+export function sonnerError() {
+   toast.error("Erro ao salvar atividade.");
+}

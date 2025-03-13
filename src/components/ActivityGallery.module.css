@@ -57,11 +57,33 @@
 }
 
 .deleteButton {
-    padding: 8px;
-    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #f21b3f;
+    text-decoration: none;
+    background-color: transparent;
+    padding: 5px 10px;
+    border: 1px solid #f21b3f;
+    border-radius: 6px;
+    transition: 0.3s;
+    font-size: 16px; /* Garante o mesmo tamanho da fonte */
+    font-weight: bold; /* Mantém a mesma espessura da fonte */
+    cursor: pointer;
+    height: 30px;
+    font-family: inherit; /* Usa a mesma fonte do sistema */
 }
 
 .deleteButton:hover {
-    background-color: lightgray;
-    color: #fff;
+    color: white;
+    background-color: #f21b3f;
 }
+
+.deleteButton span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+
+

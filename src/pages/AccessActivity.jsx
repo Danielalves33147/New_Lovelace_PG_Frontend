@@ -4,115 +4,106 @@ import styles from './AccessActivity.module.css';
 import TextArea from '../components/TextArea';
 import { toast } from 'sonner';
 
-
 function AccessActivity() {
     const { id } = useParams(); 
-const [activity, setActivity] = useState(null);
-const [responses, setResponses] = useState([]);
-const [name, setName] = useState(""); 
-const [user, setUser] = useState(null);
-const [error, setError] = useState(null); 
-const navigate = useNavigate();
+    const [activity, setActivity] = useState(null);
+    const [responses, setResponses] = useState([]);
+    const [name, setName] = useState(""); 
+    const [user, setUser] = useState(null);
+    const [error, setError] = useState(null); 
+    const navigate = useNavigate();
 
-
-useEffect(() => {
-    try {
-        const storedUser = JSON.parse(sessionStorage.getItem('user'));
-        if (storedUser) {
-            setUser(storedUser);
-            setName(storedUser.name || "");
-        } else {
+    useEffect(() => {
+        try {
+            const storedUser = JSON.parse(sessionStorage.getItem('user'));
+            if (storedUser) {
+                setUser(storedUser);
+                setName(storedUser.name || "");
+            } else {
+                navigate("/");
+            }
+        } catch (error) {
+            console.error("Erro ao analisar o usuário do sessionStorage:", error);
             navigate("/");
         }
-    } catch (error) {
-        console.error("Erro ao analisar o usuário do sessionStorage:", error);
-        navigate("/");
-    }
-}, [navigate]);
+    }, [navigate]);
 
-useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/activities/${id}`)
-        .then(response => response.json())
-        .then(data => {
-            setActivity(data);
-            setResponses(data.questions.map(question => ({
-                id: question.id,
-                text: ''
-            })));
-        })
-        .catch((err) => {
-            console.error('Erro ao carregar atividade:', err);
-            setError('Erro ao carregar a atividade. Tente novamente mais tarde.');
-        });
-}, [id]);
+    useEffect(() => {
+        fetch(`${import.meta.env.VITE_API_URL}/activities/id/${id}`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Erro ao buscar atividade: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setActivity(data);
+                // ✅ Inicializa as respostas com perguntas vazias
+                setResponses(data.questions.map(q => ({ id: q.id, text: "" })));
+            })
+            .catch((err) => console.error("Erro ao carregar atividade:", err));
+    }, [id]);
 
-const handleResponseChange = (questionId, value) => {
-    const updatedResponses = responses.map(response => {
-        if (response.id === questionId) {
-            return { ...response, text: value };
-        }
-        return response;
-    });
-    setResponses(updatedResponses);
-};
-
-const submitResponses = (e) => {
-    e.preventDefault();
-
-    if (!name.trim()) {
-        setError("Por favor, insira seu nome antes de enviar as respostas.");
-        return;
-    }
-
-    const submission = {
-        activityId: id,
-        answers: responses,
-        user: name || "Anônimo",
-        date: new Date().toISOString(),
+    const handleResponseChange = (questionId, value) => {
+        setResponses(prevResponses => 
+            prevResponses.map(response => 
+                response.id === questionId ? { ...response, text: value } : response
+            )
+        );
     };
 
-    fetch(`${import.meta.env.VITE_API_URL}/responses`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(submission),
-    })
-    .then(async resp => {
-        if (!resp.ok) {
-            const errorMessage = await resp.text();
-            throw new Error(`Erro ao enviar respostas: ${errorMessage}`);
+    const submitResponses = (e) => {
+        e.preventDefault();
+    
+        if (!name.trim()) {
+            setError("Por favor, insira seu nome antes de enviar as respostas.");
+            return;
         }
     
-        try {
+        const submission = {
+            activityId: id,
+            user: user.id, // Garante que `user.id` está sendo enviado corretamente
+            answers: responses,
+            date: new Date().toISOString(),
+        };
+    
+        fetch(`${import.meta.env.VITE_API_URL}/responses`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(submission),
+        })
+        .then(async resp => {
+            if (!resp.ok) {
+                const errorMessage = await resp.text();
+                throw new Error(`Erro ao enviar respostas: ${errorMessage}`);
+            }
             return await resp.json();
-        } catch (jsonError) {
-            throw new Error("A resposta do servidor não está em formato JSON válido.");
-        }
-    })
-    .then(data => {
-        console.log('✅ Respostas enviadas com sucesso:', data);
-        toast.success('✅ Respostas submetidas com sucesso!'); // 🔥 Agora funcionando corretamente!
-        setTimeout(() => {
-            navigate("/");
-        }, 2000); 
-    })
-    .catch((err) => {
-        console.error("❌ Erro ao enviar respostas:", err.message);
-        toast.error("❌ Erro ao enviar respostas: " + err.message); // 🔥 Agora funcionando corretamente!
-        setError("Erro ao enviar suas respostas. Tente novamente.");
-    });
+        })
+        .then(data => {
+            console.log('✅ Respostas enviadas com sucesso:', data);
+            toast.success('✅ Respostas submetidas com sucesso!');
+            setTimeout(() => {
+                navigate("/");
+            }, 2000);
+        })
+        .catch((err) => {
+            console.error("❌ Erro ao enviar respostas:", err.message);
+            toast.error("❌ Erro ao enviar respostas: " + err.message);
+            setError("Erro ao enviar suas respostas. Tente novamente.");
+        });
+    };
     
     
-};
 
-if (error) {
-    return <div>{error}</div>;
-}
+    if (error) {
+        return <div>{error}</div>;
+    }
 
-if (!activity) {
-    return <div>Carregando...</div>;
-}
+    if (!activity) {
+        return <div>Carregando...</div>;
+    }
 
     return (
         <div className={styles.container}>

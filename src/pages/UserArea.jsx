@@ -21,7 +21,17 @@ export default function UserArea() {
   const [menuVisible, setMenuVisible] = useState(false);
 
   const { login } = useUser();
-  const storedUser  = JSON.parse(sessionStorage.getItem('user'));
+  const storedUser = (() => {
+    try {
+        const userData = sessionStorage.getItem('user');
+        return userData ? JSON.parse(userData) : null;
+    } catch (error) {
+        console.error("Erro ao analisar JSON do usuário:", error);
+        sessionStorage.removeItem("user"); // Remove dados inválidos
+        return null;
+    }
+})();
+
 
   useEffect(() => {
     try {
