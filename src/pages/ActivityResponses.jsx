@@ -27,26 +27,40 @@ function ActivityResponses() {
     }, [navigate]);
 
     useEffect(() => {
-        console.log("API URL carregada:", import.meta.env.VITE_API_URL);
+        // Garante que a API URL está definida corretamente
+        const apiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, '');
+        if (!apiUrl) {
+            console.error("⚠️ Erro: VITE_API_URL não foi definido.");
+            return;
+        }
+    
+        console.log("📡 API URL carregada:", apiUrl);
+    
         const fetchActivityData = async () => {
             try {
-                const activityResponse = await fetch(`${import.meta.env.VITE_API_URL}/activities/${id}`);
+                // Fetch da atividade
+                const activityResponse = await fetch(`${apiUrl}/activities/${id}`);
+                if (!activityResponse.ok) throw new Error(`Erro ao buscar atividade: ${activityResponse.status}`);
                 const activityData = await activityResponse.json();
                 setActivity(activityData);
-
-                const responsesResponse = await fetch(`${import.meta.env.VITE_API_URL}/responses?activityId=${id}`);
+    
+                // Fetch das respostas da atividade
+                const responsesResponse = await fetch(`${apiUrl}/responses?activityId=${id}`);
+                if (!responsesResponse.ok) throw new Error(`Erro ao buscar respostas: ${responsesResponse.status}`);
                 const responsesData = await responsesResponse.json();
                 setResponses(responsesData);
+    
             } catch (err) {
-                console.log(err);
+                console.error("❌ Erro ao buscar dados da atividade:", err);
             }
         };
-
+    
         fetchActivityData();
         const intervalId = setInterval(fetchActivityData, 5000);
-
+    
         return () => clearInterval(intervalId);
     }, [id]);
+    
 
     if (!activity) {
         return <div>Carregando atividade...</div>;

@@ -72,58 +72,46 @@ const UserProfile = () => {
     setConfirmPassword(e.target.value);
   };
 
-  const saveChanges = () => {
+  const saveChanges = async () => {
     if (newPassword && newPassword !== confirmPassword) {
-      setErrorMessage("As senhas não coincidem.");
-      return;
+        setErrorMessage("As senhas não coincidem.");
+        return;
     }
-    console.log("API URL carregada:", import.meta.env.VITE_API_URL);
 
-    fetch(`${import.meta.env.VITE_API_URL}/users`)
-      .then((resp) => resp.json())
-      .then((data) => {
-        const userExists = data.some(
-          (existingUser) =>
-            existingUser.email === user.email && existingUser.id !== user.id
-        );
+    try {
+        const apiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, ""); // Remove barra extra
+        console.log("📡 API URL carregada:", apiUrl);
 
-        if (userExists) {
-          setErrorMessage(
-            "Este email já está sendo utilizado. Por favor, escolha outro."
-          );
-        } else {
-          console.log("API URL carregada:", import.meta.env.VITE_API_URL);
-          fetch(`${import.meta.env.VITE_API_URL}/users/${user.id}`, {
+        // Atualizar dados do usuário no backend
+        const response = await fetch(`${apiUrl}/users/${user.id}`, {
             method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              ...user,
-              password: newPassword || user.password,
-              profileImage: user.profileImage || "/defaultProfile.png",
+                ...user,
+                password: newPassword || user.password,
+                profileImage: user.profileImage || "/defaultProfile.png",
             }),
-          })
-            .then((resp) => {
-              if (!resp.ok) {
-                throw new Error("Erro ao atualizar o perfil");
-              }
-              return resp.json();
-            })
-            .then((updatedUser) => {
-              sessionStorage.setItem("user", JSON.stringify(updatedUser));
-              setUser(updatedUser);
-              setSuccessMessage("Dados atualizados com sucesso!");
-              setErrorMessage("");
-            })
-            .catch((err) => {
-              console.error("Erro ao atualizar:", err);
-              setErrorMessage("Erro ao atualizar os dados.");
-            });
+        });
+
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(`Erro ao atualizar perfil: ${errorMessage}`);
         }
-      })
-      .catch((err) => console.error("Erro ao verificar o email:", err));
-  };
+
+        const updatedUser = await response.json();
+        console.log("✅ Usuário atualizado:", updatedUser);
+
+        sessionStorage.setItem("user", JSON.stringify(updatedUser));
+        setUser(updatedUser);
+        setSuccessMessage("Dados atualizados com sucesso!");
+        setErrorMessage("");
+
+    } catch (err) {
+        console.error("❌ Erro ao atualizar perfil:", err);
+        setErrorMessage("Erro ao atualizar os dados.");
+    }
+};
+
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -158,101 +146,81 @@ const UserProfile = () => {
   // Apaga tb a do firebase
   const deleteUserAccount = async () => {
     const confirmResult = await Swal.fire({
-      title: "Tem certeza?",
-      text: "Esta ação não pode ser desfeita, seus dados como atividades criadas e participações vãos ser deletadas sem volta!",
-      icon: "warning",
-      iconColor : "#F21B3F",
-      showCancelButton: true,
-      confirmButtonColor: "#F21B3F",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Sim, excluir!",
-      cancelButtonText: "Cancelar"
-    });
-  
-    if (confirmResult.isConfirmed) {
-      const auth = getAuth(); // Obter a instância de autenticação do Firebase
-      const user = auth.currentUser; // Obter o usuário atual
-  
-      // Reautenticar o usuário
-      const email = user.email; // Você pode ter que pedir a senha do usuário aqui
-      const password = await Swal.fire({
-        title: 'Confirmação de Senha',
-        text: "Por favor, insira sua senha para confirmar a exclusão:",
-        input: 'password',
+        title: "Tem certeza?",
+        text: "Esta ação não pode ser desfeita. Todas as suas atividades e respostas serão apagadas permanentemente!",
+        icon: "warning",
+        iconColor: "#F21B3F",
         showCancelButton: true,
         confirmButtonColor: "#F21B3F",
-        confirmButtonText: "Confirmar",
-        cancelButtonText: "Cancelar",
-        inputValidator: (value) => {
-          if (!value) {
-            return 'Você precisa inserir sua senha!';
-          }
-        }
-      });
-  
-      if (!password.value) {
-        Swal.fire("Operação Cancelada", "A exclusão da conta foi cancelada.", "info");
-        const password = await Swal.fire({
-          title: 'Operação Cancelada!',
-          text: "A exclusão da conta foi cancelada.",
-          showCancelButton: false,
-          confirmButtonColor: "#F21B3F",
-          confirmButtonText: "Confirmar",
-        });
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sim, excluir!",
+        cancelButtonText: "Cancelar"
+    });
+
+    if (!confirmResult.isConfirmed) {
         return;
-      }
-  
-      const credential = EmailAuthProvider.credential(email, password.value);
-  
-      try {
-        // Reautentica o usuário
-        await reauthenticateWithCredential(user, credential);
-  
-        // Continue com a exclusão da conta
-        // Primeiro, exclua as atividades do usuário
-        const activitiesResponse = await fetch(`${import.meta.env.VITE_API_URL}/activities?userId=${user.uid}`);
-        const activities = await activitiesResponse.json();
-        console.log("API URL carregada:", import.meta.env.VITE_API_URL);
-        const deleteActivityPromises = activities.map((activity) =>
-          fetch(`${import.meta.env.VITE_API_URL}/activities/${activity.id}`, {
-            method: "DELETE",
-          })
-        );
-        await Promise.all(deleteActivityPromises);
-        console.log("API URL carregada:", import.meta.env.VITE_API_URL);
-        // Em seguida, exclua as respostas do usuário
-        const responsesResponse = await fetch(`${import.meta.env.VITE_API_URL}/responses?userId=${user.uid}`);
-        const responses = await responsesResponse.json();
-        console.log("API URL carregada:", import.meta.env.VITE_API_URL);
-        const deleteResponsePromises = responses.map((response) =>
-          fetch(`${import.meta.env.VITE_API_URL}/responses/${response.id}`, {
-            method: "DELETE",
-          })
-        );
-        await Promise.all(deleteResponsePromises);
-        console.log("API URL carregada:", import.meta.env.VITE_API_URL);
-        // Exclua os dados do usuário no Firestore, se aplicável
-        await fetch(`${import.meta.env.VITE_API_URL}/users/${user.uid}`, {
-          method: "DELETE",
-        });
-  
-        // Por fim, exclua a conta do Firebase Authentication
-        await user.delete(); // Exclui a conta do Firebase
-  
-        sessionStorage.removeItem("user"); // Mantém a exclusão local
-        navigate("/"); // Redireciona após a exclusão
-  
-        // Notificação de sucesso usando showToast
-        toast.success("Sua conta foi excluída com sucesso!");
-      } catch (error) {
-        console.error("Erro ao excluir a conta:", error);
-        toast.error("Houve um erro ao tentar excluir sua conta. Tente novamente mais tarde.", {
-          duration: 4000,  // A notificação ficará visível por 4 segundos
-          style: { backgroundColor: "#F21B3F", color: "#fff" }
-       });
-      }
     }
-  };
+
+    try {
+        // Obtendo o usuário autenticado
+        const storedUser = sessionStorage.getItem('user');
+        if (!storedUser) {
+            toast.error("Erro: Nenhum usuário autenticado.");
+            return;
+        }
+
+        const user = JSON.parse(storedUser);
+        console.log("🔹 Usuário autenticado para exclusão:", user);
+
+        // Confirmação da senha antes de excluir
+        const passwordConfirm = await Swal.fire({
+            title: 'Confirmação de Senha',
+            text: "Por favor, insira sua senha para confirmar a exclusão:",
+            input: 'password',
+            showCancelButton: true,
+            confirmButtonColor: "#F21B3F",
+            confirmButtonText: "Confirmar",
+            cancelButtonText: "Cancelar",
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Você precisa inserir sua senha!';
+                }
+            }
+        });
+
+        if (!passwordConfirm.value) {
+            Swal.fire("Operação Cancelada", "A exclusão da conta foi cancelada.", "info");
+            return;
+        }
+
+        console.log("📡 API URL carregada:", import.meta.env.VITE_API_URL);
+        
+        // Enviando a solicitação para o backend com a senha para validação
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${user.id}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ password: passwordConfirm.value }) // Enviando senha para confirmação
+        });
+
+        if (!response.ok) {
+            const errorMsg = await response.text();
+            throw new Error(`Erro ao excluir conta: ${errorMsg}`);
+        }
+
+        sessionStorage.removeItem("user"); // Remover usuário do armazenamento local
+        navigate("/"); // Redirecionar para a página inicial
+
+        toast.success("Sua conta foi excluída com sucesso!");
+
+    } catch (error) {
+        console.error("❌ Erro ao excluir conta:", error);
+        toast.error("Erro ao excluir a conta. Verifique sua senha e tente novamente.", {
+            duration: 4000,
+            style: { backgroundColor: "#F21B3F", color: "#fff" }
+        });
+    }
+};
+
 
   const handleLogout = async () => {
     try {

@@ -29,8 +29,15 @@ function AccessActivity() {
     }, [navigate]);
 
     useEffect(() => {
-        console.log("API URL carregada:", import.meta.env.VITE_API_URL);
-        fetch(`${import.meta.env.VITE_API_URL}/activities/id/${id}`)
+        const apiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, ''); // Remove barra extra no final da URL
+        console.log("API URL carregada:", apiUrl);
+    
+        if (!apiUrl) {
+            console.error("⚠️ Erro: VITE_API_URL não foi definido.");
+            return;
+        }
+    
+        fetch(`${apiUrl}/activities/id/${id}`)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(`Erro ao buscar atividade: ${response.status}`);
@@ -38,12 +45,18 @@ function AccessActivity() {
                 return response.json();
             })
             .then((data) => {
+                if (!data || !data.questions) {
+                    throw new Error("Dados inválidos recebidos.");
+                }
+    
                 setActivity(data);
+    
                 // ✅ Inicializa as respostas com perguntas vazias
                 setResponses(data.questions.map(q => ({ id: q.id, text: "" })));
             })
-            .catch((err) => console.error("Erro ao carregar atividade:", err));
+            .catch((err) => console.error("🚨 Erro ao carregar atividade:", err));
     }, [id]);
+    
 
     const handleResponseChange = (questionId, value) => {
         setResponses(prevResponses => 
@@ -61,19 +74,34 @@ function AccessActivity() {
             return;
         }
     
+        if (!user || !user.id) {
+            setError("Erro: Usuário não autenticado.");
+            console.error("🚨 Erro: Tentativa de envio sem usuário autenticado.");
+            return;
+        }
+    
+        const apiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, ''); // Remove barra final se existir
+        if (!apiUrl) {
+            console.error("⚠️ Erro: VITE_API_URL não foi definido.");
+            setError("Erro interno: URL da API não está configurada.");
+            return;
+        }
+    
         const submission = {
             activityId: id,
             user: user.id, // Garante que `user.id` está sendo enviado corretamente
-            answers: responses,
+            answers: responses.map(res => ({
+                questionId: res.id,
+                text: res.text.trim() || "Sem resposta" // Evita enviar respostas vazias
+            })),
             date: new Date().toISOString(),
         };
-        console.log("API URL carregada:", import.meta.env.VITE_API_URL);
     
-        fetch(`${import.meta.env.VITE_API_URL}/responses`, {
+        console.log("📤 Enviando respostas para API:", apiUrl, submission);
+    
+        fetch(`${apiUrl}/responses`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(submission),
         })
         .then(async resp => {
@@ -86,9 +114,7 @@ function AccessActivity() {
         .then(data => {
             console.log('✅ Respostas enviadas com sucesso:', data);
             toast.success('✅ Respostas submetidas com sucesso!');
-            setTimeout(() => {
-                navigate("/");
-            }, 2000);
+            setTimeout(() => navigate("/"), 2000);
         })
         .catch((err) => {
             console.error("❌ Erro ao enviar respostas:", err.message);
@@ -96,6 +122,7 @@ function AccessActivity() {
             setError("Erro ao enviar suas respostas. Tente novamente.");
         });
     };
+    
     
     
 

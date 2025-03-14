@@ -9,17 +9,15 @@ function ActivityGallery() {
     const [storedUser, setStoredUser] = useState(null);
     
 
-    useEffect(() => {
-        console.log("API URL carregada:", import.meta.env.VITE_API_URL);
-        const userData = JSON.parse(sessionStorage.getItem('user'));
-        if (userData) {
-            setStoredUser(userData);
-            fetch(`${import.meta.env.VITE_API_URL}/activities?userId=${userData.id}`)
-                .then(resp => resp.json())
-                .then(data => setActivities(Array.isArray(data) ? data : []))
-                .catch(err => console.error("Erro ao carregar atividades:", err));
-        }
-    }, []);
+    const apiUrl = import.meta.env.VITE_API_URL.startsWith("http")
+    ? import.meta.env.VITE_API_URL
+    : `https://${import.meta.env.VITE_API_URL}`;
+  
+  fetch(`${apiUrl}/activities?userId=${userData.id}`)
+      .then(resp => resp.json())
+      .then(data => setActivities(Array.isArray(data) ? data : []))
+      .catch(err => console.error("Erro ao carregar atividades:", err));
+  
 
     const deleteActivity = async (activityId) => {
         if (!storedUser) {
@@ -48,11 +46,12 @@ function ActivityGallery() {
 
         try {
             console.log("API URL carregada:", import.meta.env.VITE_API_URL);
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/activities/${activityId}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/activities/${activityId}`, {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ user_id: storedUser.id }),
             });
+         
 
             const data = await response.json();
             if (!response.ok) {

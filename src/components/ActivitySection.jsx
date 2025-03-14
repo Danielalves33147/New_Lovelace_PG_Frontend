@@ -15,7 +15,7 @@ const ActivitySection = () => {
 
     const handleAccessActivity = async (e) => {
         e.preventDefault();
-
+    
         if (!inputVisible) {
             setInputVisible(true);
             setError(null);
@@ -26,19 +26,29 @@ const ActivitySection = () => {
         } else if (accessCode.trim()) {
             try {
                 console.log("API URL carregada:", import.meta.env.VITE_API_URL);
-
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/activities/access/${accessCode}`);
-                if (!response.ok) throw new Error("Atividade não encontrada.");
+    
+                const apiUrl = import.meta.env.VITE_API_URL.replace(/\/$/, ''); // Remove barra final, se houver
+                const response = await fetch(`${apiUrl}/activities/access/${accessCode}`);
+    
+                if (!response.ok) {
+                    throw new Error("Atividade não encontrada.");
+                }
+    
                 const data = await response.json();
+                if (!data.id) {
+                    throw new Error("ID da atividade não recebido.");
+                }
+    
                 navigate(`/aA/${data.id}`);
             } catch (err) {
-                console.error(err);
+                console.error("Erro ao acessar a atividade:", err);
                 setError('Erro ao acessar a atividade.');
             }
         } else {
             setError('Por favor, insira um código de acesso.');
         }
     };
+    
 
     function pratica() {
         Swal.fire({
@@ -61,17 +71,20 @@ const ActivitySection = () => {
     const generateActivityPDF = async (activityAccessCode) => {
         toast.promise(
             new Promise(async (resolve, reject) => {
-                
-
                 try {
+                    const apiUrl = import.meta.env.VITE_API_URL.replace(/\/$/, ''); // Remove barra final extra
+                    console.log("API URL carregada:", apiUrl);
+    
                     // Buscar atividade pelo código de acesso
-                    console.log("API URL carregada:", import.meta.env.VITE_API_URL);
-                    const activityResponse = await fetch(`${import.meta.env.VITE_API_URL}/activities/access/${activityAccessCode}`);
+                    const activityResponse = await fetch(`${apiUrl}/activities/access/${activityAccessCode}`);
                     if (!activityResponse.ok) return reject("Atividade não encontrada.");
                     const activity = await activityResponse.json();
+                    if (!activity.id) return reject("ID da atividade não encontrado.");
+    
+                    console.log("🔹 Atividade carregada:", activity);
     
                     // Buscar respostas associadas
-                    const responsesResponse = await fetch(`${import.meta.env.VITE_API_URL}/responses/activity/${activity.id}`);
+                    const responsesResponse = await fetch(`${apiUrl}/responses/activity/${activity.id}`);
                     if (!responsesResponse.ok) return reject("Erro ao buscar respostas.");
                     const responses = await responsesResponse.json();
     
@@ -81,22 +94,20 @@ const ActivitySection = () => {
     
                     // Formatando respostas corretamente
                     const formattedResponses = hasResponses
-                        ? responses.map((response) => {
-                            return [
-                                response.user_name ? response.user_name : "Usuário desconhecido", // Pegando nome do usuário
-                                response.answers.length > 0 ? response.answers.join(", ") : "Sem respostas",
-                                response.date ? new Date(response.date).toLocaleDateString() : "-",
-                                response.date ? new Date(response.date).toLocaleTimeString() : "-"
-                            ];
-                        })
+                        ? responses.map((response) => [
+                            response.user_name || "Usuário desconhecido",
+                            response.answers?.length ? response.answers.join(", ") : "Sem respostas",
+                            response.date ? new Date(response.date).toLocaleDateString() : "-",
+                            response.date ? new Date(response.date).toLocaleTimeString() : "-"
+                        ])
                         : [["Nenhuma resposta disponível", "-", "-", "-"]];
-                        console.log("API URL carregada:", import.meta.env.VITE_API_URL);
-
+    
                     // Buscar usuário criador da atividade
-                    console.log("API URL carregada:", import.meta.env.VITE_API_URL);
-                    const userResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/${activity.user_id}`);
+                    const userResponse = await fetch(`${apiUrl}/users/${activity.user_id}`);
                     if (!userResponse.ok) return reject("Erro ao buscar criador da atividade.");
                     const user = await userResponse.json();
+    
+                    console.log("👤 Criador da atividade:", user);
     
                     // Gerar PDF
                     const currentDate = new Date();
@@ -121,7 +132,7 @@ const ActivitySection = () => {
                             email: "suporte@lovelace.com",
                         },
                         contact: {
-                            label: `Responsável: ${user.name}`,
+                            label: `Responsável: ${user.name || "Desconhecido"}`,
                         },
                         invoice: {
                             label: "Código de Acesso: ",
@@ -168,10 +179,6 @@ const ActivitySection = () => {
             }
         );
     };
-    
-    
-    
-    
     
 
     return (

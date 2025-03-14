@@ -14,26 +14,42 @@ function EditActivity() {
     useEffect(() => {
         const fetchActivity = async () => {
             try {
-                console.log("API URL carregada:", import.meta.env.VITE_API_URL);
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/activities/id/${id}`);
-                if (!response.ok) throw new Error("Atividade não encontrada.");
-                const data = await response.json();
-
-                // Verifica se o usuário logado é o criador da atividade
-                if (user && user.id !== data.user_id) {
-                    alert("Você não tem permissão para editar esta atividade.");
-                    navigate("/ua"); // Redireciona para a área do usuário
-                } else {
-                    setActivity(data);
+                // Garante que a API URL está corretamente definida
+                const apiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, '');
+                if (!apiUrl) {
+                    console.error("⚠️ Erro: VITE_API_URL não foi definido.");
+                    return;
                 }
+    
+                console.log("📡 API URL carregada:", apiUrl);
+    
+                const response = await fetch(`${apiUrl}/activities/id/${id}`);
+                if (!response.ok) throw new Error("Atividade não encontrada.");
+    
+                const data = await response.json();
+    
+                // Aguarda a definição do usuário antes de verificar permissões
+                if (!user) return;
+    
+                // 🔹 Verifica se o usuário logado é o criador da atividade
+                if (user.id !== data.user_id) {
+                    alert("🚫 Você não tem permissão para editar esta atividade.");
+                    navigate("/ua"); // 🔄 Redireciona para a área do usuário
+                    return;
+                }
+    
+                setActivity(data);
             } catch (err) {
-                console.error(err);
-                navigate("/ua");
+                console.error("❌ Erro ao buscar atividade:", err);
+                navigate("/ua"); // 🔄 Redireciona em caso de erro
             }
         };
-
-        fetchActivity();
+    
+        if (user) {
+            fetchActivity();
+        }
     }, [id, user, navigate]);
+    
 
     return (
         <>

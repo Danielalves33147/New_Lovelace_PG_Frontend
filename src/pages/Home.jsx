@@ -105,78 +105,94 @@ export default function Home() {
       title: message,
     });
   };
-  // Testando pg
-  async function handleSignUp(e) {
+
+
+// 🔹 Função para verificar a API_URL antes de tudo
+console.log("🔗 API_URL no .env:", import.meta.env.VITE_API_URL);
+
+// 🔹 Cadastro de Usuário
+async function handleSignUp(e) {
     e.preventDefault();
-    console.log("API_URL:", import.meta.env.VITE_API_URL);
+    console.log("📤 Enviando dados para cadastro...");
 
     try {
-      console.log("API URL carregada:", import.meta.env.VITE_API_URL);
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/users`, {
+        const apiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, ""); // Remove barra extra se houver
+        const response = await fetch(`${apiUrl}/users`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, email, password }),
         });
 
         if (!response.ok) {
-            throw new Error("Erro ao cadastrar usuário.");
+            throw new Error(`Erro ao cadastrar usuário. Status: ${response.status}`);
         }
 
         const user = await response.json();
+        console.log("✅ Usuário cadastrado:", user);
+
         sessionStorage.setItem("user", JSON.stringify(user));
         navigate("/ua");
         sonner_success_cad();
+
     } catch (error) {
-        console.error("Erro ao registrar usuário:", error);
+        console.error("❌ Erro ao registrar usuário:", error);
         sonner_fail();
     }
 }
 
-// PostGree Login Funciona
+// 🔹 Login de Usuário
 async function handleSignIn(e) {
-  e.preventDefault();
+    e.preventDefault();
+    sonner_load(); // Animação de carregamento
 
-  try {
-      sonner_load(); // Inicia o carregamento
-      console.log("API URL carregada:", import.meta.env.VITE_API_URL);
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-      });
+    try {
+        const apiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, ""); // Remove barra extra
+        console.log("📡 Enviando dados de login para:", `${apiUrl}/login`);
 
-      const data = await response.json();
-      console.log("🚀 Dados recebidos do backend:", data); // 👀 Depuração
+        const response = await fetch(`${apiUrl}/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+        });
 
-      if (!response.ok) {
-          if (response.status === 403) {
-              sonner_conta_desativada(data.error);
-          } else if (response.status === 401) {
-              sonner_fail(data.error);
-          } else {
-              sonner_fail("Erro desconhecido ao fazer login.");
-          }
-          return;
-      }
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`❌ Erro no login: ${errorText}`);
 
-      if (!data || !data.data) {
-          console.error("❌ Erro: Nenhum dado de usuário recebido.");
-          sessionStorage.removeItem("user");
-          return;
-      }
+            if (response.status === 403) {
+                return sonner_conta_desativada(errorText);
+            } else if (response.status === 401) {
+                return sonner_fail(errorText);
+            } else {
+                return sonner_fail("Erro desconhecido ao fazer login.");
+            }
+        }
 
-      // ✅ Armazena os dados corretamente no sessionStorage
-      sessionStorage.setItem("user", JSON.stringify(data.data));
+        let data;
+        try {
+            data = await response.json();
+            console.log("📥 Dados recebidos do backend:", data);
+        } catch (jsonError) {
+            console.error("❌ Erro ao converter resposta JSON:", jsonError);
+            return sonner_fail("Erro ao processar resposta do servidor.");
+        }
 
-      // ✅ Redireciona o usuário para a área logada
-      navigate("/ua");
-      sonner_success(data.message);
+        if (!data || !data.data) {
+            console.error("❌ Erro: Nenhum dado de usuário recebido.");
+            sessionStorage.removeItem("user");
+            return;
+        }
 
-  } catch (error) {
-      console.error("❌ Erro ao fazer login:", error);
-      sonner_fail("Erro ao conectar ao servidor.");
-  }
+        sessionStorage.setItem("user", JSON.stringify(data.data));
+        navigate("/ua");
+        sonner_success(data.message);
+
+    } catch (error) {
+        console.error("❌ Erro ao fazer login:", error);
+        sonner_fail("Erro ao conectar ao servidor.");
+    }
 }
+
 
 
 

@@ -16,17 +16,41 @@ function Activity() {
         // Obter usuário logado do sessionStorage
         const storedUser = sessionStorage.getItem('user');
         if (storedUser) {
-            setUser(JSON.parse(storedUser));
+            try {
+                setUser(JSON.parse(storedUser));
+            } catch (error) {
+                console.error("🚨 Erro ao analisar JSON do usuário:", error);
+            }
         }
-        console.log("API URL carregada:", import.meta.env.VITE_API_URL);
-        fetch(`${import.meta.env.VITE_API_URL}/activities/id/${id}`)
-            .then((response) => {
-                if (!response.ok) throw new Error('Atividade não encontrada.');
+    
+        // Garantir que a URL da API esteja definida corretamente
+        const apiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, '');
+        if (!apiUrl) {
+            console.error("⚠️ Erro: VITE_API_URL não foi definido.");
+            return;
+        }
+    
+        console.log("📡 API URL carregada:", apiUrl);
+    
+        fetch(`${apiUrl}/activities/id/${id}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Erro ao buscar atividade: ${response.status}`);
+                }
                 return response.json();
             })
-            .then((data) => setActivity(data))
-            .catch((err) => console.error(err));
+            .then(data => {
+                if (data) {
+                    setActivity(data);
+                } else {
+                    console.warn("⚠️ Atividade não encontrada na resposta da API.");
+                }
+            })
+            .catch(error => {
+                console.error("❌ Erro ao carregar atividade:", error);
+            });
     }, [id]);
+    
 
     const copiarCodigo = () => {
         const codigoElement = document.getElementById('codigo');
