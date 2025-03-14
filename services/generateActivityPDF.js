@@ -3,7 +3,10 @@ import jsPDFInvoiceTemplate, { OutputType } from "jspdf-invoice-template";
 async function generateActivityPDF(activityId) {
   try {
     // Buscar atividades e respostas do JSON Server
+    console.log("API URL carregada:", import.meta.env.VITE_API_URL);
+
     const [activityResponse, responsesResponse] = await Promise.all([
+      
       fetch(`${import.meta.env.VITE_API_URL}/activities/${activityId}`).then((res) => res.json()),
       fetch(`${import.meta.env.VITE_API_URL}/responses?activityId=${activityId}`).then((res) => res.json()),
     ]);

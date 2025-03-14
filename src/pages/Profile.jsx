@@ -77,6 +77,7 @@ const UserProfile = () => {
       setErrorMessage("As senhas não coincidem.");
       return;
     }
+    console.log("API URL carregada:", import.meta.env.VITE_API_URL);
 
     fetch(`${import.meta.env.VITE_API_URL}/users`)
       .then((resp) => resp.json())

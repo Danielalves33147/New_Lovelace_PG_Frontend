@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 function ActivityGallery() {
     const [activities, setActivities] = useState([]);
     const [storedUser, setStoredUser] = useState(null);
+    console.log("API URL carregada:", import.meta.env.VITE_API_URL);
 
     useEffect(() => {
         const userData = JSON.parse(sessionStorage.getItem('user'));

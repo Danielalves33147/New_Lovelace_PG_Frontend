@@ -61,6 +61,9 @@ function timerStart(){
 
     return formatTimer
 }
+
+console.log("API URL carregada:", import.meta.env.VITE_API_URL);
+
 // Carregar o JSON
 fetch(`${import.meta.env.BASE_URL}content.json`)
   .then(response => response.json()) 

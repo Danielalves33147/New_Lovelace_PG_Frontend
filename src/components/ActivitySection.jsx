@@ -25,6 +25,8 @@ const ActivitySection = () => {
             }, 7000);
         } else if (accessCode.trim()) {
             try {
+                console.log("API URL carregada:", import.meta.env.VITE_API_URL);
+
                 const response = await fetch(`${import.meta.env.VITE_API_URL}/activities/access/${accessCode}`);
                 if (!response.ok) throw new Error("Atividade não encontrada.");
                 const data = await response.json();
@@ -59,6 +61,8 @@ const ActivitySection = () => {
     const generateActivityPDF = async (activityAccessCode) => {
         toast.promise(
             new Promise(async (resolve, reject) => {
+                console.log("API URL carregada:", import.meta.env.VITE_API_URL);
+
                 try {
                     // Buscar atividade pelo código de acesso
                     const activityResponse = await fetch(`${import.meta.env.VITE_API_URL}/activities/access/${activityAccessCode}`);
@@ -85,7 +89,8 @@ const ActivitySection = () => {
                             ];
                         })
                         : [["Nenhuma resposta disponível", "-", "-", "-"]];
-    
+                        console.log("API URL carregada:", import.meta.env.VITE_API_URL);
+
                     // Buscar usuário criador da atividade
                     const userResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/${activity.user_id}`);
                     if (!userResponse.ok) return reject("Erro ao buscar criador da atividade.");
