@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { UserProvider } from "./services/UserContext.jsx";
+import { UserProvider } from "../services/UserContext.jsx";
 
 export default function App() {
 
