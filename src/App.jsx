@@ -12,6 +12,8 @@ import Practice from "./pages/pratica.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 
 
+import React, { createContext, useContext, useState, useEffect } from 'react';
+
 import { UserProvider } from '../services/UserContext.jsx';  // Importa o UserProvider pro Context
 
 import { ToastContainer } from 'react-toastify';
