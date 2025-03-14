@@ -108,6 +108,7 @@ export default function Home() {
   // Testando pg
   async function handleSignUp(e) {
     e.preventDefault();
+    console.log("API_URL:", import.meta.env.VITE_API_URL);
 
     try {
         const response = await fetch(`${import.meta.env.VITE_API_URL}/users`, {
