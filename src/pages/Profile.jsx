@@ -92,6 +92,7 @@ const UserProfile = () => {
             "Este email já está sendo utilizado. Por favor, escolha outro."
           );
         } else {
+          console.log("API URL carregada:", import.meta.env.VITE_API_URL);
           fetch(`${import.meta.env.VITE_API_URL}/users/${user.id}`, {
             method: "PUT",
             headers: {
@@ -211,25 +212,25 @@ const UserProfile = () => {
         // Primeiro, exclua as atividades do usuário
         const activitiesResponse = await fetch(`${import.meta.env.VITE_API_URL}/activities?userId=${user.uid}`);
         const activities = await activitiesResponse.json();
-  
+        console.log("API URL carregada:", import.meta.env.VITE_API_URL);
         const deleteActivityPromises = activities.map((activity) =>
           fetch(`${import.meta.env.VITE_API_URL}/activities/${activity.id}`, {
             method: "DELETE",
           })
         );
         await Promise.all(deleteActivityPromises);
-  
+        console.log("API URL carregada:", import.meta.env.VITE_API_URL);
         // Em seguida, exclua as respostas do usuário
         const responsesResponse = await fetch(`${import.meta.env.VITE_API_URL}/responses?userId=${user.uid}`);
         const responses = await responsesResponse.json();
-  
+        console.log("API URL carregada:", import.meta.env.VITE_API_URL);
         const deleteResponsePromises = responses.map((response) =>
           fetch(`${import.meta.env.VITE_API_URL}/responses/${response.id}`, {
             method: "DELETE",
           })
         );
         await Promise.all(deleteResponsePromises);
-  
+        console.log("API URL carregada:", import.meta.env.VITE_API_URL);
         // Exclua os dados do usuário no Firestore, se aplicável
         await fetch(`${import.meta.env.VITE_API_URL}/users/${user.uid}`, {
           method: "DELETE",

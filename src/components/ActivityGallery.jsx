@@ -7,9 +7,10 @@ import Swal from "sweetalert2";
 function ActivityGallery() {
     const [activities, setActivities] = useState([]);
     const [storedUser, setStoredUser] = useState(null);
-    console.log("API URL carregada:", import.meta.env.VITE_API_URL);
+    
 
     useEffect(() => {
+        console.log("API URL carregada:", import.meta.env.VITE_API_URL);
         const userData = JSON.parse(sessionStorage.getItem('user'));
         if (userData) {
             setStoredUser(userData);
@@ -46,6 +47,7 @@ function ActivityGallery() {
         }
 
         try {
+            console.log("API URL carregada:", import.meta.env.VITE_API_URL);
             const response = await fetch(`${import.meta.env.VITE_API_URL}/activities/${activityId}`, {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },

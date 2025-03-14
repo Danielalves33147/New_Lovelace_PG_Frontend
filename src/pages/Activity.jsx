@@ -18,7 +18,7 @@ function Activity() {
         if (storedUser) {
             setUser(JSON.parse(storedUser));
         }
-
+        console.log("API URL carregada:", import.meta.env.VITE_API_URL);
         fetch(`${import.meta.env.VITE_API_URL}/activities/id/${id}`)
             .then((response) => {
                 if (!response.ok) throw new Error('Atividade não encontrada.');

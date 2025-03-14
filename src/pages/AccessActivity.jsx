@@ -29,6 +29,7 @@ function AccessActivity() {
     }, [navigate]);
 
     useEffect(() => {
+        console.log("API URL carregada:", import.meta.env.VITE_API_URL);
         fetch(`${import.meta.env.VITE_API_URL}/activities/id/${id}`)
             .then((response) => {
                 if (!response.ok) {
@@ -66,6 +67,7 @@ function AccessActivity() {
             answers: responses,
             date: new Date().toISOString(),
         };
+        console.log("API URL carregada:", import.meta.env.VITE_API_URL);
     
         fetch(`${import.meta.env.VITE_API_URL}/responses`, {
             method: 'POST',

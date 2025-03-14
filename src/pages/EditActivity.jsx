@@ -14,6 +14,7 @@ function EditActivity() {
     useEffect(() => {
         const fetchActivity = async () => {
             try {
+                console.log("API URL carregada:", import.meta.env.VITE_API_URL);
                 const response = await fetch(`${import.meta.env.VITE_API_URL}/activities/id/${id}`);
                 if (!response.ok) throw new Error("Atividade não encontrada.");
                 const data = await response.json();

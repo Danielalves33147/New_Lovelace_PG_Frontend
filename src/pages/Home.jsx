@@ -111,6 +111,7 @@ export default function Home() {
     console.log("API_URL:", import.meta.env.VITE_API_URL);
 
     try {
+      console.log("API URL carregada:", import.meta.env.VITE_API_URL);
         const response = await fetch(`${import.meta.env.VITE_API_URL}/users`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -137,7 +138,7 @@ async function handleSignIn(e) {
 
   try {
       sonner_load(); // Inicia o carregamento
-
+      console.log("API URL carregada:", import.meta.env.VITE_API_URL);
       const response = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },

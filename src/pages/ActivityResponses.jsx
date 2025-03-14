@@ -27,6 +27,7 @@ function ActivityResponses() {
     }, [navigate]);
 
     useEffect(() => {
+        console.log("API URL carregada:", import.meta.env.VITE_API_URL);
         const fetchActivityData = async () => {
             try {
                 const activityResponse = await fetch(`${import.meta.env.VITE_API_URL}/activities/${id}`);

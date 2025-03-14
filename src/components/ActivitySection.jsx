@@ -61,10 +61,11 @@ const ActivitySection = () => {
     const generateActivityPDF = async (activityAccessCode) => {
         toast.promise(
             new Promise(async (resolve, reject) => {
-                console.log("API URL carregada:", import.meta.env.VITE_API_URL);
+                
 
                 try {
                     // Buscar atividade pelo código de acesso
+                    console.log("API URL carregada:", import.meta.env.VITE_API_URL);
                     const activityResponse = await fetch(`${import.meta.env.VITE_API_URL}/activities/access/${activityAccessCode}`);
                     if (!activityResponse.ok) return reject("Atividade não encontrada.");
                     const activity = await activityResponse.json();
@@ -92,6 +93,7 @@ const ActivitySection = () => {
                         console.log("API URL carregada:", import.meta.env.VITE_API_URL);
 
                     // Buscar usuário criador da atividade
+                    console.log("API URL carregada:", import.meta.env.VITE_API_URL);
                     const userResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/${activity.user_id}`);
                     if (!userResponse.ok) return reject("Erro ao buscar criador da atividade.");
                     const user = await userResponse.json();
