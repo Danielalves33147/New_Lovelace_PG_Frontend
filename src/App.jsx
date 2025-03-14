@@ -1,6 +1,24 @@
-import { useEffect } from "react";
-import { UserProvider } from "../services/UserContext.jsx";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./index.css";
+import Home from "./pages/Home.jsx";
+import FormActivity from "./pages/FormActivity.jsx";
+import Activity from "./pages/Activity.jsx";
+import UserArea from "./pages/UserArea.jsx";
+import Profile from "./pages/Profile.jsx";
+import EditActivity from "./pages/EditActivity.jsx";
+import AccessActivity from "./pages/AccessActivity.jsx";
+import ActivityResponses from "./pages/ActivityResponses.jsx";
+import Practice from "./pages/pratica.jsx";
+import ScrollToTop from "./components/ScrollToTop.jsx";
 
+
+import { UserProvider } from '../services/UserContext.jsx';  // Importa o UserProvider pro Context
+
+import { ToastContainer } from 'react-toastify';
+
+import { Toaster, toast } from 'sonner'
+
+import 'react-toastify/dist/ReactToastify.css';
 export default function App() {
 
   useEffect(() => {
