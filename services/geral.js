@@ -62,7 +62,7 @@ function timerStart(){
     return formatTimer
 }
 // Carregar o JSON
-fetch('content.json')
+fetch(`${import.meta.env.BASE_URL}content.json`)
   .then(response => response.json()) 
   .then(data => {
     console.log(data)
