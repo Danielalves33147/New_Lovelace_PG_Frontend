@@ -40,19 +40,20 @@ export default function Home() {
 
   useEffect(() => {
     try {
-        const userData = sessionStorage.getItem("user");
-
-        if (userData) {
-            const storedUser = JSON.parse(userData);
-            if (storedUser) {
-                navigate("/ua");
-            }
+      const userData = localStorage.getItem("user");
+  
+      if (userData) {
+        const storedUser = JSON.parse(userData);
+        if (storedUser) {
+          navigate("/ua"); // 🚨 Isso está forçando a navegação ao carregar o componente!
         }
+      }
     } catch (error) {
-        console.error("Erro ao analisar JSON do usuário:", error);
-        sessionStorage.removeItem("user"); // Remove o dado inválido para evitar problemas futuros
+      console.error("Erro ao analisar JSON do usuário:", error);
+      sessionStorage.removeItem("user");
     }
-}, [navigate]);
+  }, [navigate]);
+  
 
 
 
@@ -130,7 +131,7 @@ async function handleSignUp(e) {
         const user = await response.json();
         console.log("✅ Usuário cadastrado:", user);
 
-        sessionStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("user", JSON.stringify(user));
         navigate("/ua");
         sonner_success_cad();
 
@@ -183,7 +184,7 @@ async function handleSignIn(e) {
             return;
         }
 
-        sessionStorage.setItem("user", JSON.stringify(data.data));
+        localStorage.setItem("user", JSON.stringify(data.data));
         navigate("/ua");
         sonner_success(data.message);
 

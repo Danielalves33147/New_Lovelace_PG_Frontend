@@ -7,17 +7,38 @@ import Swal from "sweetalert2";
 function ActivityGallery() {
     const [activities, setActivities] = useState([]);
     const [storedUser, setStoredUser] = useState(null);
-    
 
     const apiUrl = import.meta.env.VITE_API_URL.startsWith("http")
-    ? import.meta.env.VITE_API_URL
-    : `https://${import.meta.env.VITE_API_URL}`;
-  
-  fetch(`${apiUrl}/activities?userId=${userData.id}`)
-      .then(resp => resp.json())
-      .then(data => setActivities(Array.isArray(data) ? data : []))
-      .catch(err => console.error("Erro ao carregar atividades:", err));
-  
+        ? import.meta.env.VITE_API_URL
+        : `https://${import.meta.env.VITE_API_URL}`;
+
+        useEffect(() => {
+            let isMounted = true;
+        
+            const storedUserString = localStorage.getItem("user");
+        
+            if (storedUserString) {
+                const parsedUser = JSON.parse(storedUserString);
+                setStoredUser(parsedUser);
+                console.log("🧪 Usuário logado (parsedUser):", parsedUser);
+        
+                const apiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, "");
+                fetch(`${apiUrl}/activities?userId=${parsedUser.id}`)
+                    .then(resp => resp.json())
+                    .then(data => {
+                        if (isMounted) {
+                            setActivities(Array.isArray(data) ? data : []);
+                        }
+                    })
+                    .catch(err => console.error("Erro ao carregar atividades:", err));
+            }
+        
+            return () => {
+                isMounted = false;
+            };
+        }, []);
+        
+        
 
     const deleteActivity = async (activityId) => {
         if (!storedUser) {
@@ -25,7 +46,6 @@ function ActivityGallery() {
             return;
         }
 
-        // 🔥 SweetAlert para confirmação antes de excluir
         const { value: confirmationText } = await Swal.fire({
             title: "Tem certeza?",
             text: "Uma vez deletada, é impossivel recupera-la, se entender isso confirme escrevendo 'Entendo o que estou fazendo'",
@@ -45,13 +65,11 @@ function ActivityGallery() {
         }
 
         try {
-            console.log("API URL carregada:", import.meta.env.VITE_API_URL);
             const response = await fetch(`${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/activities/${activityId}`, {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ user_id: storedUser.id }),
             });
-         
 
             const data = await response.json();
             if (!response.ok) {

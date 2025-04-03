@@ -23,14 +23,15 @@ export default function UserArea() {
   const { login } = useUser();
   const storedUser = (() => {
     try {
-        const userData = sessionStorage.getItem('user');
+        const userData = localStorage.getItem('user');
         return userData ? JSON.parse(userData) : null;
     } catch (error) {
         console.error("Erro ao analisar JSON do usuário:", error);
-        sessionStorage.removeItem("user"); // Remove dados inválidos
+        localStorage.removeItem("user");
         return null;
     }
-})();
+  })();
+  
 
 
   useEffect(() => {
