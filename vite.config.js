@@ -5,12 +5,13 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: "0.0.0.0",
-    port: process.env.PORT || 3000, // Usa a porta que o Railway definir
+    port: 5173, // <-- Porta nova aqui
     strictPort: true,
   },
   preview: {
     host: "0.0.0.0",
-    port: process.env.PORT || 3000,
+    port: 5173, // <-- Mesma aqui
     strictPort: true,
   },
 });
+
