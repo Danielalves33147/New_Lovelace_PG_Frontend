@@ -7,7 +7,7 @@ function EditActivity() {
     const navigate = useNavigate();
     const [activity, setActivity] = useState(null);
     const [user, setUser] = useState(() => {
-        const storedUser = sessionStorage.getItem('user');
+        const storedUser = localStorage.getItem('user');
         return storedUser ? JSON.parse(storedUser) : null;
     });
 
