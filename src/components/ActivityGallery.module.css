@@ -1,0 +1,89 @@
+.gallery {
+    border: 1px solid lightgray;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+}
+
+.galleryContainer {
+    display: grid;
+    grid-template-columns: 1fr; 
+    gap: 20px;
+    padding: 20px;
+}
+
+.activityCard {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.activityCard h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.activityCard p {
+    margin-bottom: 20px;
+}
+
+.activityCard a {
+    color: #f21b3f;
+    text-decoration: none;
+    background-color: transparent;
+    padding: 5px;
+    border:1px solid #f21b3f;
+    border-radius: 6px;
+    transition: .3s;
+}
+
+.activityCard a:hover {
+    color: #fff;
+    background-color: #f21b3f;
+}
+
+.links {
+    display: flex;
+    justify-content: space-between;
+}
+
+.links p {
+    margin: 0;
+}
+
+.links div {
+    display: flex;
+    gap: 10px;
+}
+
+.deleteButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #f21b3f;
+    text-decoration: none;
+    background-color: transparent;
+    padding: 5px 10px;
+    border: 1px solid #f21b3f;
+    border-radius: 6px;
+    transition: 0.3s;
+    font-size: 16px; /* Garante o mesmo tamanho da fonte */
+    font-weight: bold; /* Mantém a mesma espessura da fonte */
+    cursor: pointer;
+    height: 30px;
+    font-family: inherit; /* Usa a mesma fonte do sistema */
+}
+
+.deleteButton:hover {
+    color: white;
+    background-color: #f21b3f;
+}
+
+.deleteButton span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+
+

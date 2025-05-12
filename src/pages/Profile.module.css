@@ -1,0 +1,218 @@
+.container {
+  max-width: 960px;
+  margin: auto;
+}
+
+/* Header */
+
+.header {
+  width: 100%;
+  height: 72px;
+  border: 1px solid #8e8e8e;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  margin: 24px 0 30px 0;
+  border-radius: 8px;
+}
+
+.header h1 {
+  font: bold normal 36px "Inspiration";
+  transform: rotate(-13deg);
+  background:  linear-gradient(269.52deg, #F21B3F -1.77%, #FFD151 95%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.userInfo p:hover {
+  cursor: pointer;
+}
+
+.userInfo div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.userInfo img {
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+}
+
+.userInfo img:hover {
+  cursor: pointer;
+}
+
+/* Header do card */
+
+.userProfile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  max-width: 960px;
+  background-color: #fff;
+  border-radius: 8px;
+  border: 1px solid #8e8e8e;
+}
+
+.profileHeader {
+  text-align: center;
+}
+
+.profileHeader h2 {
+  font-size: 16px;
+  margin-top: 24px;
+}
+
+.profileImgContainer {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  cursor: pointer;
+}
+
+.profileImg {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  transition: opacity 0.3s ease;
+}
+
+.profileImgContainer:hover .profileImg {
+  opacity: 0.7;
+}
+
+.tooltip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 10px;
+  white-space: nowrap;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+/* Informações */
+
+.profileDetails {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.profileDetails label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.profileDetails input,
+.profileDetails textarea {
+  width: 100%;
+  padding: 12px 9px;
+  margin-bottom: 16px;
+  border: 1px solid #000;
+  border-radius: 6px;
+  transition: border 0.3s;
+  font-size: 10px ;
+}
+
+.profileDetails button {
+  padding: 10px;
+  background-color: #f21b3f;
+  color: white;
+  border: 1px solid #000;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+  font-weight: bold;
+}
+
+.profileDetails button:hover {
+  background-color: #8C1024;
+}
+
+.profileDetails button:nth-of-type(3) {
+  border: none;
+  background-color: #fff;
+  color: #F21B3F;
+}
+
+/* Modal foto */
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modalContent {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+
+.modalContent label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.modalContent input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.modalContent div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.closeModalButton {
+  padding: 10px 20px;
+  background-color: #f21b3f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s;
+}
+
+.closeModalButton:hover {
+  background-color: #8C1024;
+}

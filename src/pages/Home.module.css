@@ -1,0 +1,476 @@
+.container {
+    max-width: 960px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.container > div {
+    text-align: center;
+}
+
+section {
+    width: 100%;
+    border-radius: 12px;
+}
+
+/* Header */
+
+.header {
+    width: 100%;
+    height: 72px;
+    border: 1px solid #8e8e8e;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 48px;
+    margin: 24px 0 64px 0;
+    border-radius: 8px;
+}
+
+.header h1 {
+    font: bold normal 36px "Inspiration";
+    transform: rotate(-13deg);
+    background:  linear-gradient(269.52deg, #F21B3F -1.77%, #FFD151 95%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+nav ul {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+}
+
+nav button {
+    height: 48px;
+    width: 103px;
+    border-radius: 12px;
+    color: #fff;
+    background-color: #F21B3F;
+    font-weight: bold;
+}
+
+nav button:hover {
+    background-color: #8C1024;
+}
+
+#sobreNos {
+    background-color: #fff;
+    color: #000;
+}
+
+#sobreNos:hover {
+    background-color: lightgray;
+}
+
+/* Primeira seção */
+
+.mainContent {
+    display: flex;
+    height: 480px;
+    margin-bottom: 43px;
+    background: linear-gradient(to right, #FFD151 0%, #F21B3F 100%);
+}
+
+.mainContent .imgMain, .mainContent div {
+    flex: 1;
+}
+
+.mainContent .imgMain {
+    border-radius: 12px 0 0 12px;
+}
+
+.mainContent div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    padding: 30px;
+    border-radius: 0 12px 12px 0;
+    color: white;
+}
+
+.mainContent h1 {
+    font: normal normal 128px "Inspiration";
+    transform: rotate(-13deg);
+    color: #fff;
+}
+
+.mainContent p {
+    font-size: 10px;
+}
+
+.mainContent button {
+    width: 193px;
+    height: 49px;
+    border-radius: 42px;
+    border: none;
+    background-color: #fff;
+}
+
+.mainContent button:hover {
+    background-color: lightgray;
+}
+
+/* Seções com vídeo */
+
+.secVideo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.secVideo > strong {
+    margin-bottom: 27px;
+    font-size: 32px;
+    font-weight: bold;
+    background-color: #F21B3F;
+    padding: 21px 23px;
+    text-align: center;
+    color: white;
+    border-radius: 12px;
+    font: 'sfPro', sans-serif;
+}
+
+.secVideo div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.secVideo div > p {
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+.secVideo div span {
+    color: #F21B3F;
+}
+
+.secVideo video {
+    border: 1px solid black;
+    border-radius: 12px;
+    aspect-ratio: 1/1;
+}
+
+.secVideo div > p, .secVideo div > video {
+    flex: 1;
+    padding: 10px;
+}
+
+/* Para professores */
+
+.container > div {
+    height: 240px;
+    background-color: #8e8e8e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 53px 0 25px 0;
+}
+
+.container > div h1 {
+    background-color: #fff;
+    padding: 21px;
+    border-radius: 12px;
+}
+
+.container > div strong {
+    font: bold normal 48px 'sfPro', sans-serif;
+    transform: rotate(-13deg);
+    background:  linear-gradient(269.52deg, #F21B3F -1.77%, #FFD151 95%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Colaboradores */
+
+.collaborators {
+    padding: 30px;
+    margin: 50px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    border: 1px solid black;
+    font-family: 'Inter', serif;
+    font-weight: bold;
+}
+
+.collaborators span {
+    font-size: 32px;
+    font-weight: bolder;
+}
+
+.collaborators .midlle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.midlle p, .midlle h1 {
+    flex: 1;
+}
+
+.midlle h1 {
+    font: bold normal 128px "Inspiration";
+    transform: rotate(-13deg);
+    background:  linear-gradient(269.52deg, #F21B3F -1.77%, #FFD151 95%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+}
+
+.midlle p {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.collaborators .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    width: 100%;
+    margin: 24px 0 60px;
+    gap: 10px;
+} 
+
+.cards div {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.cards div p:nth-of-type(2) {
+    color: #F21B3F;
+    font-weight: bold;
+  }
+
+.cards img {
+    border: 1px solid black;
+    width: 100%;
+    aspect-ratio: 1/1;
+    /* height: 206px; */
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+/* Login/Cadastro */
+
+.login{
+    background-color: #fff;
+    border-radius: 12px;
+    border: 1px solid black;
+    position: relative;
+    overflow: hidden;
+    min-height: 480px;
+    margin-bottom: 90px;
+}
+
+.login p{
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.3px;
+    margin: 20px 0;
+}
+
+.login span{
+    font-size: 12px;
+}
+
+.link {
+    color: #007BFF;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.link:hover {
+    color: #0056b3; 
+}
+
+
+.login a{
+    font-size: 13px;
+    text-decoration: none;
+    margin: 15px 0 10px;  
+}
+
+.login button[type="submit"], .toggle_container button{
+    background-color: #F21B3F;
+    color: #fff;
+    font-size: 12px;
+    padding: 10px 45px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.login button.hidden{
+    background-color: transparent;
+    border-color: #fff;
+}
+
+.login form{
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 40px;
+    height: 100%;
+}
+
+.login input{
+    background-color: #eee;
+    border: none;
+    margin: 8px 0;
+    padding: 10px 15px;
+    font-size: 13px;
+    border-radius: 8px;
+    width: 100%;
+    outline: none;
+}
+
+.form_container{
+    position: absolute;
+    top: 0;
+    height: 100%;
+    transition: all 0.6s ease-in-out;
+}
+
+.sign_in{
+    left: 0;
+    width: 50%;
+    z-index: 2;
+}
+
+.login.active .sign_in{
+    transform: translateX(100%);
+}
+
+.sign_up{
+    left: 0;
+    width: 50%;
+    opacity: 0;
+    z-index: 1;
+}
+
+.login.active .sign_up{
+    transform: translateX(100%);
+    opacity: 1;
+    z-index: 5;
+    animation: move 0.6s;
+}
+
+@keyframes move{
+    0%, 49.99%{
+        opacity: 0;
+        z-index: 1;
+    }
+    50%, 100%{
+        opacity: 1;
+        z-index: 5;
+    }
+}
+
+.social_icons{
+    margin: 20px 0;
+}
+
+.social_icons a{
+    border: 1px solid #ccc;
+    border-radius: 20%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 3px;
+    width: 40px;
+    height: 40px;
+}
+
+.showpassword {
+    position: relative;
+    width: 100%;
+}
+
+.toggle_container{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    transition: all 0.6s ease-in-out;
+    /* border-radius: 150px 0 0 100px; */
+    z-index: 1000;
+}
+
+.login.active .toggle_container{
+    transform: translateX(-100%);
+    /* border-radius: 0 150px 100px 0; */
+}
+
+.toggle{
+    background-color: #F21B3F;
+    height: 100%;
+    background: linear-gradient(269.52deg, #F21B3F -1.77%, #FFD151 95%);
+    color: #fff;
+    position: relative;
+    left: -100%;
+    height: 100%;
+    width: 200%;
+    transform: translateX(0);
+    transition: all 0.6s ease-in-out;
+}
+
+.login.active .toggle{
+    transform: translateX(50%);
+}
+
+.toggle_panel{
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 30px;
+    text-align: center;
+    top: 0;
+    transform: translateX(0);
+    transition: all 0.6s ease-in-out;
+}
+
+.toggle_panel p {
+  font-size: 16px;
+  color: #fff;
+}
+
+.toggle_left{
+    transform: translateX(-200%);
+}
+
+.login.active .toggle_left{
+    transform: translateX(0);
+}
+
+.toggle_right{
+    right: 0;
+    transform: translateX(0);
+}
+
+.login.active .toggle_right{
+    transform: translateX(200%);
+}

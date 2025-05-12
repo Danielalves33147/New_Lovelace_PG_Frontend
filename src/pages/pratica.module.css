@@ -1,0 +1,324 @@
+.hidden {
+    display: none;
+  }
+  
+
+.loveLog {
+    background:  linear-gradient(269.52deg, #F21B3F -1.77%, #FFD151 95%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    height: 70px;
+    width: 100%;
+    border-bottom: 1px solid #F21B3F;
+
+}
+
+.textContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.textContainer p {
+    display: flex;
+    font-family: 'Roboto Mono', monospace;
+    color: #141115;
+    border: 1px solid #F21B3F;
+    border-radius: 6px;
+    padding: 16px;
+    width: 80%;
+    min-width: 300px;
+    height: 320px;
+    margin: 32px auto; 
+    user-select: none;
+    overflow: auto;
+}
+
+.submitAnswer {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid #F21B3F;
+    color: #141115;
+    background-color: transparent;
+}
+
+.logoImage {
+    width: 230px; /* Ajuste a largura conforme necessário */
+    height: auto; /* Mantém a proporção */
+  }
+
+.sendAnswer {
+    width: 200px;
+    padding: 16px;
+    color: #FFFFFF;
+    background: #F21B3F;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    transition: all .2s;
+    cursor: pointer;
+}
+
+.changeText {
+    width: 200px;
+    padding: 16px;
+    color: #F21B3F;
+    background: transparent;
+    border: 1px solid #F21B3F;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all .2s;
+}
+
+.sendAnswer:hover{
+    border: 1px solid #F21B3F;
+    background-color: white;
+    color: #F21B3F;
+    box-shadow:  rgba(242, 27, 63, 0.15);
+
+}
+
+.changeText:hover {
+    border: 1px solid #F21B3F;
+    color: black;
+    box-shadow: 0px 8px 21px rgba(242, 27, 63, 0.15);
+}
+
+.answerButtons {
+    display: flex;
+    flex-direction: row;
+    margin: 16px 0;
+    gap: 16px;
+}
+
+/* Timer */
+.temporizador {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+    margin-top: 42px;
+}
+
+.temporizador > h3{
+    color: #141115;
+}
+
+
+.timer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 120px;
+    height: 48px;
+    padding: 32px;
+    border: 1px solid #F21B3F;
+    border-radius: 6px;
+    box-shadow: 0px 8px 21px rgba(0, 119, 182, 0.15);
+    font-family: 'Roboto Mono', monospace;
+}
+
+.timerButton {
+    width: 120px;
+    background-color: transparent;
+    border: 1px solid #F21B3F;
+    border-radius: 6px;
+    padding: 16px;
+    color: #F21B3F;
+    font-weight: 700;
+
+    transition: all .2s;
+}
+
+.timerButton:hover {
+    cursor: pointer;
+    background-color: #F4F4F4;
+}
+
+/* Result modal */
+.resultContainer {
+    width: 100%;
+    height: 100%;
+    background-color: #1411157a;
+    position: fixed;
+    flex-direction: column;
+    top: 0;
+    left: 0;
+    z-index: 2000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+
+.foot{
+    display: none;
+        
+}
+
+.modal {
+    background: linear-gradient(325.65deg, #FFFFFF 50%, #F21B3F 142.69%);
+    width: 50%;
+    min-width: 300px;
+    padding: 72px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    border-radius: 16px; /* Torna o modal mais arredondado */
+}
+
+.modal h1{
+    color: #141115;
+    font-size: 40px;
+}
+
+.modal .scoreTitle {
+    color: #FFFF;
+}
+
+.modal .level {
+    color: #FFFFFF; /* Muda a cor do texto para a mesma cor que o resultado */
+    /* Adicione qualquer outro estilo que você queira aqui */
+}
+
+.modal p {
+    color: #141115;
+}
+
+.scoreContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.scoreTitle {
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(88.34deg, #F21B3F -11.9%, #FFD151 106.42%);
+    color: #FFFFFF;
+
+    font-size: 32px;
+    border-radius: 2px;
+}
+
+.score {
+    color: #FFFFFF;
+    font-size: 64px;
+}
+
+.level {
+    font-weight: 700;
+    font-size: 32px;
+    background:  linear-gradient(269.52deg, #F21B3F -1.77%, #FFD151 95%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    user-select: none;
+}
+
+.usuario{
+    display: none;
+}
+
+.Text{
+    display: none;
+}
+
+.temp{
+    display: none;
+}
+
+.resultButtons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 16px;
+}
+
+.save {
+    height: 64px;
+    width: 8em;
+    padding: 16px;
+    border: none;
+    border-radius: 4px;
+    background: #F21B3F;
+    color: #FFFFFF;
+    border: 1px solid #F21B3F;
+    cursor: pointer;
+    transition: all .2s;
+}
+
+.dontSavePdf {
+    height: 64px;
+    width: 8em;
+    padding: 16px;
+    border: 1px solid #F21B3F;
+    background: transparent;
+    cursor: pointer;
+    color: #F21B3F;
+    border-radius: 4px;
+}
+
+.dontSavePdf:hover{
+    border: 1px solid #F21B3F;
+    color: black;
+    box-shadow: 0px 8px 21px rgba(242, 27, 63, 0.15);
+}
+
+.save:hover {
+    border: 1px solid #F21B3F;
+    background-color: white;
+    color: #F21B3F;
+    box-shadow: 0px 8px 21px rgba(242, 27, 63, 0.15);
+}
+
+.divider {
+    height: 72px;
+    border: 1px solid #F4F4F4;
+}
+
+
+footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+
+    padding: 48px 32px;
+
+    border-top: 1px solid #F21B3F;
+    font-size: 16px;
+    font-weight: 400;
+    width: 100%;
+    margin: 96px 0;
+    text-align: center;
+    color: #141115;
+}
+footer p{
+    color: #141115;
+}
+footer p span {
+    color: #141115;
+    font-weight: 700;
+}
+
+footer .divider {
+    color: #141115;
+    display: none;
+}

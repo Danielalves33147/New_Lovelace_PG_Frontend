@@ -1,0 +1,64 @@
+.activitySection {
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid lightgray;
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 150px;
+    gap: 20px;
+}
+
+.activitySection section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 15px;
+    border: 1px solid lightgray;
+    border-radius: 8px;
+}
+
+.activitySection h2 {
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.activitySection p {
+    font-size: 11px;
+    margin-bottom: 20px;
+}
+
+
+.accessActivity form {
+    display: flex;
+    gap: 10px;
+}
+
+.activitySection input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+ }
+
+.activitySection button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.activitySection button {
+    background-color: #f21b3f;
+    color: #fff;
+    width: fit-content;
+}
+
+.activitySection button a {
+    color: #fff;
+}
+
+.activitySection button:hover {
+   background-color: #8C1024;
+}

@@ -1,0 +1,30 @@
+.materialsSection {
+    display: flex;
+    justify-content: space-around; 
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid lightgray;
+    border-radius: 8px; 
+}
+
+.materialBlock {
+    flex: 1;
+    margin: 10px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.materialBlock img {
+    margin-top: 25px;
+    width: 100%;
+}
+
+.materialBlock h3 {
+    margin-top: 0;
+}
+
+.materialBlock p {
+    font-size: 12px;
+}
