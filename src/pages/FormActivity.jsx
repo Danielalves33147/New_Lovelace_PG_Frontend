@@ -23,9 +23,9 @@ function generateAccessCode(length = 8) {
 function FormActivity({ activity = null }) {
     const navigate = useNavigate();
 
-    // Obter o usuário logado do sessionStorage
+    // Obter o usuário logado do localStorage
     const [user, setUser] = useState(() => {
-        const storedUser = sessionStorage.getItem('user');
+        const storedUser = localStorage.getItem('user');
         return storedUser ? JSON.parse(storedUser) : null;
     });
 
