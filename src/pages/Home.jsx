@@ -109,7 +109,7 @@ export default function Home() {
 
 
 // 🔹 Função para verificar a API_URL antes de tudo
-console.log("🔗 API_URL no .env:", import.meta.env.VITE_API_URL);
+//console.log("🔗 API_URL no .env:", import.meta.env.VITE_API_URL);
 
 // 🔹 Cadastro de Usuário
 async function handleSignUp(e) {
