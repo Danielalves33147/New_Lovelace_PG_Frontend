@@ -23,14 +23,14 @@ import { Toaster, toast } from 'sonner'
 import 'react-toastify/dist/ReactToastify.css';
 export default function App() {
 
-  useEffect(() => {
+  /*useEffect(() => {
     console.log("🔍 Testando conexão com o backend...");
 
     fetch(`${import.meta.env.VITE_API_URL}/test`)
       .then(resp => resp.text())
       .then(data => console.log("✅ Backend responde:", data))
       .catch(err => console.error("❌ Erro na comunicação com o backend:", err));
-  }, []);
+  }, []);*/
 
   return (
     <UserProvider>

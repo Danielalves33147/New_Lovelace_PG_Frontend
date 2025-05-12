@@ -20,7 +20,7 @@ function ActivityGallery() {
             if (storedUserString) {
                 const parsedUser = JSON.parse(storedUserString);
                 setStoredUser(parsedUser);
-                console.log("🧪 Usuário logado (parsedUser):", parsedUser);
+                //console.log("🧪 Usuário logado (parsedUser):", parsedUser);
         
                 const apiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, "");
                 fetch(`${apiUrl}/activities?userId=${parsedUser.id}`)
