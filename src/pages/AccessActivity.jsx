@@ -15,7 +15,7 @@ function AccessActivity() {
 
     useEffect(() => {
         try {
-            const storedUser = JSON.parse(sessionStorage.getItem('user'));
+            const storedUser = JSON.parse(localStorage.getItem('user'));
             if (storedUser) {
                 setUser(storedUser);
                 setName(storedUser.name || "");
@@ -23,14 +23,14 @@ function AccessActivity() {
                 navigate("/");
             }
         } catch (error) {
-            console.error("Erro ao analisar o usuário do sessionStorage:", error);
+            console.error("Erro ao analisar o usuário do localStorage:", error);
             navigate("/");
         }
     }, [navigate]);
 
     useEffect(() => {
         const apiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, ''); // Remove barra extra no final da URL
-        console.log("API URL carregada:", apiUrl);
+       // console.log("API URL carregada:", apiUrl);
     
         if (!apiUrl) {
             console.error("⚠️ Erro: VITE_API_URL não foi definido.");
