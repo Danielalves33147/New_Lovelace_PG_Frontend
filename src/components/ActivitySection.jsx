@@ -197,7 +197,7 @@ const ActivitySection = () => {
                 </button>
             </section>
 
-            <section className={styles.customActivity}>
+            <section className={styles.findActivity}>
                 <h2>Gerar Documento PDF</h2>
                 <p> Gere um relatório PDF com os estudantes que responderam sua atividade.</p>
                 <input
