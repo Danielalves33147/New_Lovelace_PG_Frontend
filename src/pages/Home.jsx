@@ -148,7 +148,7 @@ async function handleSignIn(e) {
 
     try {
         const apiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, ""); // Remove barra extra
-        console.log("📡 Enviando dados de login para:", `${apiUrl}/login`);
+        //console.log("📡 Enviando dados de login para:", `${apiUrl}/login`);
 
         const response = await fetch(`${apiUrl}/login`, {
             method: "POST",
@@ -172,7 +172,7 @@ async function handleSignIn(e) {
         let data;
         try {
             data = await response.json();
-            console.log("📥 Dados recebidos do backend:", data);
+            //console.log("📥 Dados recebidos do backend:", data);
         } catch (jsonError) {
             console.error("❌ Erro ao converter resposta JSON:", jsonError);
             return sonner_fail("Erro ao processar resposta do servidor.");

@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { toast } from 'sonner';
 import jsPDFInvoiceTemplate, { OutputType } from 'jspdf-invoice-template';
 
+
 const ActivitySection = () => {
     const [accessCodePDF, setAccessCodePDF] = useState('');
     const [accessCode, setAccessCode] = useState('');
@@ -73,7 +74,7 @@ const ActivitySection = () => {
             new Promise(async (resolve, reject) => {
                 try {
                     const apiUrl = import.meta.env.VITE_API_URL.replace(/\/$/, ''); // Remove barra final extra
-                    console.log("API URL carregada:", apiUrl);
+                    //console.log("API URL carregada:", apiUrl);
     
                     // Buscar atividade pelo código de acesso
                     const activityResponse = await fetch(`${apiUrl}/activities/access/${activityAccessCode}`);
@@ -81,14 +82,14 @@ const ActivitySection = () => {
                     const activity = await activityResponse.json();
                     if (!activity.id) return reject("ID da atividade não encontrado.");
     
-                    console.log("🔹 Atividade carregada:", activity);
+                    //console.log("🔹 Atividade carregada:", activity);
     
                     // Buscar respostas associadas
                     const responsesResponse = await fetch(`${apiUrl}/responses/activity/${activity.id}`);
                     if (!responsesResponse.ok) return reject("Erro ao buscar respostas.");
                     const responses = await responsesResponse.json();
     
-                    console.log("📥 Respostas carregadas:", responses);
+                    //console.log("📥 Respostas carregadas:", responses);
     
                     const hasResponses = responses.length > 0;
     
@@ -107,7 +108,7 @@ const ActivitySection = () => {
                     if (!userResponse.ok) return reject("Erro ao buscar criador da atividade.");
                     const user = await userResponse.json();
     
-                    console.log("👤 Criador da atividade:", user);
+                    //console.log("👤 Criador da atividade:", user);
     
                     // Gerar PDF
                     const currentDate = new Date();
@@ -192,9 +193,7 @@ const ActivitySection = () => {
             <section className={styles.customActivity}>
                 <h2>Atividade Personalizada</h2>
                 <p>Crie suas próprias atividades adaptadas aos seus objetivos.</p>
-                <button>
-                    <a href="/ce">Criar</a>
-                </button>
+                <button onClick={() => navigate('/ce')}>Criar</button>
             </section>
 
             <section className={styles.accessActivity}>
