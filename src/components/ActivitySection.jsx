@@ -197,22 +197,29 @@ const ActivitySection = () => {
                 </button>
             </section>
 
-            <section className={styles.activityCard}>
+            <section className={styles.accessActivity}>
             <h2>Gerar Documento PDF</h2>
             <p>Gere um relatório PDF com os estudantes que responderam sua atividade.</p>
-            <input
+            <form onSubmit={(e) => {
+                e.preventDefault();
+                generateActivityPDF(accessCodePDF);
+            }} className={styles.form}>
+                <input
                 type="text"
-                placeholder="Insira o Código de Acesso"
+                placeholder="Código de Acesso"
                 value={accessCodePDF}
                 onChange={(e) => setAccessCodePDF(e.target.value)}
-            />
-            <button onClick={() => generateActivityPDF(accessCodePDF)}>Criar</button>
+                required
+                />
+                <button type="submit">Criar</button>
+            </form>
             </section>
 
-            <section className={styles.activityCard}>
+
+            <section className={styles.accessActivity}>
             <h2>Acessar Atividade</h2>
             <p>Insira um código de acesso para desbloquear uma atividade.</p>
-            <form className={styles.form} onSubmit={handleAccessActivity}>
+            <form onSubmit={handleAccessActivity} className={styles.form}>
                 {inputVisible && (
                 <input
                     type="text"
@@ -228,6 +235,7 @@ const ActivitySection = () => {
             </form>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             </section>
+
 
 
             <Dictionary />
