@@ -197,37 +197,38 @@ const ActivitySection = () => {
                 </button>
             </section>
 
-            <section className={styles.findActivity}>
-                <h2>Gerar Documento PDF</h2>
-                <p> Gere um relatório PDF com os estudantes que responderam sua atividade.</p>
-                <input
-                    type="text"
-                    placeholder="Insira o Código de Acesso"
-                    value={accessCode}
-                    onChange={(e) => setAccessCodePDF(e.target.value)}
-                />
-                <button onClick={() => generateActivityPDF(accessCodePDF)}>Criar</button>
+            <section className={styles.activityCard}>
+            <h2>Gerar Documento PDF</h2>
+            <p>Gere um relatório PDF com os estudantes que responderam sua atividade.</p>
+            <input
+                type="text"
+                placeholder="Insira o Código de Acesso"
+                value={accessCodePDF}
+                onChange={(e) => setAccessCodePDF(e.target.value)}
+            />
+            <button onClick={() => generateActivityPDF(accessCodePDF)}>Criar</button>
             </section>
 
-            <section className={styles.accessActivity}>
-                <h2>Acessar Atividade</h2>
-                <p>Insira um código de acesso para desbloquear uma atividade.</p>
-                <form onSubmit={handleAccessActivity}>
-                    {inputVisible && (
-                        <input
-                            type="text"
-                            placeholder="Código de Acesso"
-                            value={accessCode}
-                            onChange={(e) => setAccessCode(e.target.value)}
-                            required
-                        />
-                    )}
-                    <button type="submit">
-                        {inputVisible ? 'Acessar' : 'Código'}
-                    </button>
-                </form>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
+            <section className={styles.activityCard}>
+            <h2>Acessar Atividade</h2>
+            <p>Insira um código de acesso para desbloquear uma atividade.</p>
+            <form className={styles.form} onSubmit={handleAccessActivity}>
+                {inputVisible && (
+                <input
+                    type="text"
+                    placeholder="Código de Acesso"
+                    value={accessCode}
+                    onChange={(e) => setAccessCode(e.target.value)}
+                    required
+                />
+                )}
+                <button type="submit">
+                {inputVisible ? 'Acessar' : 'Código'}
+                </button>
+            </form>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
             </section>
+
 
             <Dictionary />
         </section>
